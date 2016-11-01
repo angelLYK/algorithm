@@ -23,7 +23,7 @@ void bucketSort(int a[], int size, int ex) {
 	int count[DECIMAL];
 	int output[size];
 	//init count
-	for (int i = 0; i < DECIMAL; i++) {
+	for (int i = 0; i < DECIMAL; i++) {//hello
 		count[i] = 0;
 	}
 
