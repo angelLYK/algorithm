@@ -31,20 +31,10 @@ List makeEmpty(List L) {
 }
 
 int isEmpty(List L){
-	if(L == NULL){//return true
-		WarnError("L is NULL");
-		return NULL_POINTER;
-	}
-
 	return L->Next == NULL;
 }
 
 int isLast(List L, Position P){
-	if(P == NULL){
-		WarnError("L is NULL");
-		return NULL_POINTER;
-	}
-
 	return P->Next == NULL;
 }
 
@@ -104,3 +94,57 @@ Position FindPrevious( ElementType X, List L ){
 
 	return NULL;
 }
+
+void insert(ElementType e, List L, Position P){
+	if(P == NULL){
+		return;
+	}
+
+	Position tmp;
+	tmp = malloc(sizeof(struct Node));
+	if(tmp == NULL){
+		FatalError("OOM");
+	}
+	tmp->Element = e;
+	tmp->Next = P->Next;
+	P->Next = tmp;
+}
+
+void DeleteList( List L ){
+	if(L == NULL){
+		WarnError("L is Null");
+		return;
+	}
+	Position p, tmp;
+	p = L->Next;
+	while(p != NULL){
+		tmp = p -> Next;
+		free(p);
+		p = tmp;
+	}
+
+	free(L);
+}
+
+Position header(List L){
+	return L;
+}
+
+Position first(List L){
+	if(L != NULL){
+		return L->Next;
+	}
+	return NULL;
+}
+
+Position advance(Position P){
+	if(P != NULL){
+		return P->Next;
+	}
+	return NULL;
+}
+
+ElementType retrieve(Position P){
+	return P->Element;
+}
+
