@@ -52,7 +52,7 @@ char *changeStrIfMinusIsFirst(char *str){
 	return str;
 }
 
-//扫面字符串，当读取数字，输出；当读入符号，把符号压入栈，同时输出栈中优先级大于或者等于待入栈的符号。
+//scan字符串，当读取数字，输出；当读入符号，把符号压入栈，同时输出栈中优先级大于或者等于待入栈的符号。
 //特殊情况：'('优先级最高，只有遇到 ')'时，把‘(’与‘)’之间的符号输出。
 //扫描完字符串后，把栈中所有元素输出
 
@@ -113,6 +113,48 @@ char *infix2postfix(char *str){
 	return output1;
 }
 
+int caculate(char *input){
+	char c;
+	Stack stack = createStack();
+	while((c = *input) != '\0'){
+		input++;
+		if(c >= '0' && c<='9'){
+			int v = c - '0';
+			push(v, stack);
+		}else{
+			int t1 = top(stack);
+			pop(stack);
+			int t2 = top(stack);
+			pop(stack);
+			int result;
+			switch (c) {
+				case '+':
+					result = t1 + t2;
+					break;
+				case '-':
+					result = t1 - t2;
+					break;
+				case '*':
+					result = t1 * t2;
+					break;
+				case '/':
+					result = t1 / t2;
+					break;
+				default:
+					printf("error: only support + ,-, *, /\n");
+					exit(0);
+					break;
+			}
+			push(result, stack);
+		}
+	}
+
+	int r = top(stack);
+	makeEmpty(stack);
+	free(stack);
+	return r;
+}
+
 int main(int argc, char **argv) {
 	char *infixLine;
 	char *trim;
@@ -122,5 +164,8 @@ int main(int argc, char **argv) {
 	trim = changeStrIfMinusIsFirst(infixLine);
 	out = infix2postfix(trim);
 	printf("%s\n", out);
+	int r = caculate(out);
+	printf("result->%d\n", r);
+	free(out);
 }
 
