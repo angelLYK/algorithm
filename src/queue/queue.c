@@ -20,6 +20,13 @@ struct QueueRecord {
 	ElementType *Array;
 };
 
+int static Succ(int v, Queue q){
+	if(++v == q->Capacity){
+		v=0;
+	}
+	return v;
+}
+
 int IsEmpty(Queue q){
 	return q->Size == 0;
 }
@@ -98,13 +105,6 @@ ElementType FrontAndDequeue(Queue q){
 		Error("队列为空");
 		return 0;
 	}
-}
-
-int static Succ(int v, Queue q){
-	if(++v == q->Capacity){
-		v=0;
-	}
-	return v;
 }
 
 
