@@ -1,0 +1,60 @@
+/*
+ * listDirectory.c
+ *
+ *  Created on: Nov 18, 2016
+ *      Author: angel
+ */
+
+#include <dirent.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+//root: last char is '/'
+static char *getPath(char *root, struct dirent *ep){
+	char *newRoot;
+	int rootSize, fileNameSize;
+	rootSize = strlen(root);
+	fileNameSize = strlen(ep->d_name);
+	newRoot = malloc(rootSize + fileNameSize + 2);
+	strcat(newRoot, root);
+	strcat(newRoot, ep->d_name);
+	strcat(newRoot, "/");
+	newRoot[rootSize + fileNameSize + 1] = '\0';
+	return newRoot;
+}
+
+static void printfName(struct dirent *ep, int depth){
+	int i = 0;
+	for(; i<=depth; i++){
+		printf(" ");
+	}
+	printf("%s\n", ep->d_name);
+}
+
+//root: last char is '/'
+static void listDir(char *root, DIR *d, int depth){
+	char *name;
+	DIR *nd;
+	struct dirent *ep;
+	while((ep = readdir(d))!= NULL){
+		printfName(ep, depth);
+		if(ep->d_type == DT_DIR){
+			depth++;
+			name = getPath(root, ep);
+			nd = opendir(name);
+			listDir(name, nd, depth);
+			free(name);
+		}
+	}
+	free(root);
+}
+
+int main(int argc, char **argv) {
+	DIR *d;
+	d = opendir(argv[1]);
+	if(d != NULL){
+		listDir(argv[1],d, 0);
+	}
+}
+
